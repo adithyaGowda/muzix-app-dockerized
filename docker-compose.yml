@@ -1,0 +1,82 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    container_name:
+      mongo-docker
+
+  muzix:
+    image:
+      spring-docker
+    build:
+      track-service/
+    restart:
+      always
+    container_name:
+      spring-docker
+    links:
+      - config
+      - eureka
+      - mongo
+    depends_on:
+      - mongo
+      - config
+    ports:
+      - 8080:8080
+
+
+  config:
+   image:
+    config-docker
+   build:
+    config-server-pattern/
+   container_name:
+    config-docker
+   ports:
+     - 8090:8090
+   restart:
+     always
+
+
+  eureka:
+   image:
+    eureka-docker
+   build:
+    eureka-server-pattern/
+   container_name:
+    eureka-docker
+   restart:
+     always
+   ports:
+     - 8091:8091
+
+
+#  apigateway:
+#    image:
+#      api-docker
+#    build:
+#      api-gateway-pattern/
+#    container_name:
+#      api-docker
+#    ports:
+#      - 8092:8092
+#
+#  userservice:
+#    image:
+#      user-docker
+#    build:
+#      user-service/
+#    container_name:
+#      user-docker
+#    depends_on:
+#      - apigateway
+#    links:
+#      - apigateway
+#    ports:
+#      - 8095:8095
+
+    
+
+
